@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/my_style.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
     <div class="">
@@ -22,7 +23,7 @@
                 <div class="signup-content">
                     <div class="signup-form">
                         <h2 class="form-title">S'inscrire</h2>
-                        <form method="POST" class="register-form" id="register-form" action="/verify_mail">
+                        <form method="POST" class="register-form" id="register-form" action="/register">
                             @csrf
                             <div class="form-group">
                                 <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
@@ -41,10 +42,10 @@
                                 <label for="email"><i class="zmdi zmdi-email"></i></label>
                                 <input type="email" name="email" id="email" placeholder="Email" required/>
                             </div>
-                            <p id="test">Teste</p>
-                            <div class="form-group" id="notif_email">
 
-                            </div>
+                            <span class="form-group" id="notif_email">
+
+                            </span>
 
                             <div class="form-group">
                                 <label for="promotion"><i class="zmdi zmdi-calendar"></i></label>
@@ -87,9 +88,9 @@
                                 <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
                                 <input type="password" name="re_pass" minlength=8 id="re_pass" placeholder="Repeat your password" required/>
                             </div>
-                            <div class="form-group" id="notif">
+                            <span class="form-group" id="notif">
 
-                            </div>
+                            </span>
                             <div class="form-group form-button">
                                 <input type="submit" name="signup" id="signup" class="form-submit" value="Enregistrer" required/>
                             </div>
@@ -115,14 +116,21 @@
                     <div class="signin-form">
                         <h2 class="form-title">Se connecter</h2>
                         <form method="POST" class="register-form" id="login-form" action="/login">
+                            @csrf
                             <div class="form-group">
                                 <label for="email"><i class="zmdi zmdi-email"></i></label>
-                                <input type="email" name="email" id="email" placeholder="Email"/>
+                                <input type="email" name="email" id="email_log" placeholder="Email"/>
                             </div>
+                            <span class="form-group" id="notif_email_log">
+
+                            </span>
                             <div class="form-group">
                                 <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
                                 <input type="password" minlength=7 name="pass" id="your_pass" placeholder="Password"/>
                             </div>
+                            <span class="form-group" id="notif_pass_log">
+
+                            </span>
                             <div class="form-group form-button">
                                 <input type="submit" name="signin" id="signin" class="form-submit" value="Valider"/>
                             </div>

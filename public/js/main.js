@@ -1,22 +1,4 @@
 $("#signup").click(function(e){
-    email = $("#email").val();
-    $.ajax({
-        url: "/verify_mail",
-        method: "post",
-        data : 'email=' + email,
-        dataType : "html",
-        success : function(retour){
-            e.preventDefault();
-            console.log(retour);
-           if(retour == 1){
-            e.preventDefault();
-            $("#notif_mail").append(
-                "<p class='rouge'>Adresse mail déjà utilisée</p>"
-            )
-           }
-        }
-    })
-
     mdp = $("#pass").val();
     mdp2 = $("#re_pass").val();
 	if(mdp != mdp2){
@@ -29,31 +11,63 @@ $("#signup").click(function(e){
 
 })
 
-$("#test").click(function(e){
-    alert("mail");
-    email = $("#email").val();
+$("#email").change(function(e){
+    verify('/verify_mail','email', 'notif_email', 'Adresse mail déjà utilisée', e);
+})
+
+$("#email_log").change(function(e){
+    verify('/verify_mail','email_log', 'notif_email_log', 'Vérifier votre adresse mail', e, true);
+})
+
+$("#your_pass").change(function(e){
+    verify('/verify_pass', 'your_pass', 'notif_pass_log', 'Mot de passe incorrecte', e, true);
+})
+
+$("#login-form").submit(function(e){
+    verify('/verify_mail','email_log', 'notif_email_log', 'Vérifier votre adresse mail', e, true);
+    verify('/verify_pass', 'your_pass', 'notif_pass_log', 'Mot de passe incorrecte', e, true);
+})
+
+function verify(url_r ,id, notif, texte, e, log = false){
+    email = $("#"+id).val();
+    pass_mail = '';
+    if(url_r == '/verify_pass'){
+        pass_mail = $("#email_log").val();
+    }
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
     $.ajax({
-        url: "/verify_mail",
-        method: "POST",
-        data : 'email=' + email,
+        url: url_r,
+        method: "post",
+        data : 'donne=' + email+'&pass_mail='+ pass_mail,
         dataType : "html",
         success : function(retour){
-            e.preventDefault();
-            console.log(retour);
-           if(retour == 1){
-            e.preventDefault();
-            $("#notif_mail").append(
-                "<p class='rouge'>Adresse mail déjà utilisée</p>"
-            )
-           }
-        },
-        error : function(resultat, statut, erreur){
-            console.log(resultat);
+            if(log == false){
+                if(retour != 0){
+                    e.preventDefault();
+                    $("#"+notif).append(
+                        "<p class='rouge'>"+texte+"</p>"
+                    )
+                }
+                else{
+                    $("#"+notif).empty();
+                }
+            }
+            else{
+                if(retour != 1){
+                    e.preventDefault();
+                    $("#"+notif).append(
+                        "<p class='rouge'>"+texte+"</p>"
+                    )
+                }
+                else{
+                    $("#"+notif).empty();
+                }
+            }
         }
     })
-})
+}
