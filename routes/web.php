@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('registerLogin/index');
 });
 */
-Route::get('/', 'Login@log_reg');
+Route::get('/', 'Login@log_reg')->name('log_reg');
 
 Route::post('/register', 'Login@register');
 
@@ -26,3 +26,7 @@ Route::post('/verify_mail', 'Login@verify_mail');
 Route::post('/verify_pass', 'Login@verify_pass');
 
 Route::post('/login', 'Login@login');
+
+Route::get('/connecter', 'Login@connecter')->name('connecter');
+
+Route::get('/deconnecter', 'Login@deconnecter')->name('deconnecter');

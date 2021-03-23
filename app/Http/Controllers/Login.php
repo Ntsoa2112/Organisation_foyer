@@ -58,10 +58,28 @@ class Login extends Controller
         $pass = $request->input('pass');
         $retour = DB::table('etudiant')->select('password') ->where('email', $email) ->get();
         if (Hash::check($pass, $retour[0]->password)) {
-            return 1;
+            session(['auth' => true, 'email' => $email]);
+            return redirect()->route('connecter');
         }
         else{
-            //redirigena @ login avec notif mail ou mdp incorrecte
+            return "Mail ou mot de passe incorrecte";
         }
+    }
+
+    public function connecter(Request $request){
+        if($request->session()->has('auth') && $request->session()->has('email') && session('auth') == true){
+            $user = DB::table('etudiant')->where('email', session('email')) ->get();
+            return view('home.home',[
+                'user' => $user
+            ]);
+        }
+        else{
+            return redirect()->route('log_reg');
+        }
+    }
+
+    public function deconnecter(Request $request){
+        $request->session()->flush();
+        return redirect()->route('log_reg');
     }
 }

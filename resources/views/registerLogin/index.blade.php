@@ -126,13 +126,14 @@
                             </span>
                             <div class="form-group">
                                 <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
-                                <input type="password" minlength=7 name="pass" id="your_pass" placeholder="Password"/>
+                                <input type="password" minlength=7 name="pass" id="your_pass" placeholder="Password" disabled/>
                             </div>
                             <span class="form-group" id="notif_pass_log">
 
                             </span>
+
                             <div class="form-group form-button">
-                                <input type="submit" name="signin" id="signin" class="form-submit" value="Valider"/>
+                                <input type="submit" disabled name="signin" id="signin" class="form-submit" value="Valider"/>
                             </div>
                         </form>
                     </div>

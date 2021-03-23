@@ -16,11 +16,11 @@ $("#email").change(function(e){
 })
 
 $("#email_log").change(function(e){
-    verify('/verify_mail','email_log', 'notif_email_log', 'Vérifier votre adresse mail', e, true);
+    verify('/verify_mail','email_log', 'notif_email_log', 'Vérifier votre adresse mail', e, true, 'your_pass');
 })
 
 $("#your_pass").change(function(e){
-    verify('/verify_pass', 'your_pass', 'notif_pass_log', 'Mot de passe incorrecte', e, true);
+    verify('/verify_pass', 'your_pass', 'notif_pass_log', 'Mot de passe incorrecte', e, true, 'signin');
 })
 
 $("#login-form").submit(function(e){
@@ -28,7 +28,7 @@ $("#login-form").submit(function(e){
     verify('/verify_pass', 'your_pass', 'notif_pass_log', 'Mot de passe incorrecte', e, true);
 })
 
-function verify(url_r ,id, notif, texte, e, log = false){
+function verify(url_r ,id, notif, texte, e, log = false, attr = 'rien'){
     email = $("#"+id).val();
     pass_mail = '';
     if(url_r == '/verify_pass'){
@@ -66,6 +66,9 @@ function verify(url_r ,id, notif, texte, e, log = false){
                 }
                 else{
                     $("#"+notif).empty();
+                    if(attr != 'rien'){
+                        $("#"+attr).removeAttr("disabled");
+                    }
                 }
             }
         }
