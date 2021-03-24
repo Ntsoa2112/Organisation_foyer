@@ -28,23 +28,45 @@ class Login extends Controller
             'promotion' => $input['promotion']
         ]);
         if($insert == 1){
-            session(['auth' => true]);
-            return view('home.home',[
-                'user' => $input
-            ]);
+            session(['auth' => true, 'email' => $input['email']]);
+            return redirect()->route('connecter');
+        }
+        else{
+            return "On a un problème sur le serveur, veuillez contacter l'administrateur";
+        }
+    }
+
+    public function r_register(Request $request){
+        $input = $request->all();
+        $insert = DB::table('referant')->insert([
+            'nom' => $input['name'],
+            'prenom' => $input['fname'],
+            'appelation' => $input['aname'],
+            'email' => $input['email'],
+            'tel' => $input['phone'],
+            'password' => Hash::make($input['re_pass']),
+        ]);
+        if($insert == 1){
+            session(['auth' => true, 'email' => $input['email'], 'ref' => true]);
+            return redirect()->route('connecter');
+        }
+        else{
+            return "On a un problème sur le serveur, veuillez contacter l'administrateur";
         }
     }
 
     public function verify_mail(Request $request){
         $email = $request->input('donne');
-        $retour = DB::table('etudiant') ->where('email', $email) ->get();
+        $table = $request->input('table');
+        $retour = DB::table($table) ->where('email', $email) ->get();
         return count($retour);
     }
 
     public function verify_pass(Request $request){
         $pass = $request->input('donne');
         $pass_mail = $request->input('pass_mail');
-        $retour = DB::table('etudiant')->select('password') ->where('email', $pass_mail) ->get();
+        $table = $request->input('table');
+        $retour = DB::table($table)->select('password') ->where('email', $pass_mail) ->get();
         if (Hash::check($pass, $retour[0]->password)) {
             return 1;
         }
@@ -53,12 +75,16 @@ class Login extends Controller
         }
     }
 
-    public function login(Request $request){
+    public function login($su, Request $request){
         $email = $request->input('email');
         $pass = $request->input('pass');
-        $retour = DB::table('etudiant')->select('password') ->where('email', $email) ->get();
-        if (Hash::check($pass, $retour[0]->password)) {
+        $table = $su.$request->input('e');
+        $retour = DB::table($table)->select('password') ->where('email', $email) ->get();
+        if (Hash::check($pass, $retour[0]->password)){
             session(['auth' => true, 'email' => $email]);
+            if($table == 'referant'){
+                session(['ref' => true]);
+            }
             return redirect()->route('connecter');
         }
         else{
@@ -67,8 +93,12 @@ class Login extends Controller
     }
 
     public function connecter(Request $request){
+        $table = 'etudiant';
+        if($request->session()->has('ref') && session('ref') == true){
+            $table = 'referant';
+        }
         if($request->session()->has('auth') && $request->session()->has('email') && session('auth') == true){
-            $user = DB::table('etudiant')->where('email', session('email')) ->get();
+            $user = DB::table($table)->where('email', session('email')) ->get();
             return view('home.home',[
                 'user' => $user
             ]);
