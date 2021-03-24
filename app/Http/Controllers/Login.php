@@ -27,6 +27,7 @@ class Login extends Controller
             'password' => Hash::make($input['re_pass']),
             'promotion' => $input['promotion']
         ]);
+
         if($insert == 1){
             session(['auth' => true, 'email' => $input['email']]);
             return redirect()->route('connecter');
@@ -46,6 +47,7 @@ class Login extends Controller
             'tel' => $input['phone'],
             'password' => Hash::make($input['re_pass']),
         ]);
+        
         if($insert == 1){
             session(['auth' => true, 'email' => $input['email'], 'ref' => true]);
             return redirect()->route('connecter');
