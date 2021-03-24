@@ -104,6 +104,7 @@ class Login extends Controller
             ]);
         }
         else{
+
             return redirect()->route('log_reg');
         }
     }
